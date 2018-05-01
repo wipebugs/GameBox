@@ -1,0 +1,10 @@
+############################
+GameBox User Requirements
+############################
+
+1. Put the DataFile and main.py in the same directory
+2. Install Python Pandas
+3. Install Pyhton numpy
+4. Install Python matplotlib
+5. Run the code in Terminal: python3 main.py
+6. Find the results both in your main.py directory and terminal 
