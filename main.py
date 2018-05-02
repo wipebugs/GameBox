@@ -176,6 +176,25 @@ def rank(data):
     val = input('please select: ')
     if val == '0':
         main(data)
+    elif val == '1':
+        data = data.drop_duplicates(['Name'], keep='last')
+        data = data.sort_values(by='SteamSpyOwners', ascending=False)
+        rank_sell = data.head(50)[['Name', 'SteamSpyOwners']]
+        rank_sell['Rank'] = rank_sell['SteamSpyOwners'].rank(ascending=False).astype('int')
+        print(rank_sell)
+    elif val == '2':
+        data = data.sort_values(by='RecommendationCount', ascending=False)
+        rank_pop = data.head(50)[['Name', 'RecommendationCount']]
+        rank_pop['Rank'] = rank_pop['RecommendationCount'].rank(ascending=False).astype('int')
+        print(rank_pop)
+    elif val == '3':
+        temp = data[data['ReleaseDate'] != '']
+        temp['ReleaseDate'] = pd.to_datetime(temp.ReleaseDate, errors='coerce')
+        temp = temp[(temp['ReleaseDate'] < datetime.today()) & (temp['ReleaseDate'] > datetime(2016, 1 , 1))]
+        temp = temp.sort_values(by='RecommendationCount', ascending=False)
+        rank_new = temp.head(50)[['Name', 'RecommendationCount', 'ReleaseDate']]
+        rank_new['Rank'] = rank_new['RecommendationCount'].rank(ascending=False).astype('int')
+        print(rank_new)
     else:
         print('Invalid input, please select again: ')
         rank(data)
