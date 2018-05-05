@@ -1,6 +1,6 @@
 import pandas as pd
 
-# Converts json data from  to excel sheet in DataFile.xlsx
+# Converts json data from steamspy.json to excel sheet in DataFile.xlsx
 def json_to_xlsx_pd():
 	# Read and write the data to xlsx file
     json_data = pd.read_json('steamspy.json', encoding='utf-8').transpose()
