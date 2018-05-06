@@ -147,6 +147,7 @@ def search(data):
 # And another sorted by the release date showing the latest games.
 def recommend(data):
     print('1. Give recommendation by specific game type')
+    print('2. Give recommendation by a simple survey')
     print('0. Return to previous menu')
     val = input('please select: ')
 
@@ -195,6 +196,48 @@ def recommend(data):
         # Select top 'rows' number of results
         res = t.head(rows)[['Name', 'Metacritic', 'ReleaseDate']]
         print('\n\n\nThe top {} new matching games are: '.format(rows))
+        print(res)
+    elif val == '2':
+        # execute our algorithms to find the recommendation games for user based on their game habits
+        print('Anytime you want to quit this survey, enter something else when input')
+        try:
+            price = input('What is your estimates cost on one game in USD?(eg: 10): ')
+            pre = input('Which platform do you wanna to play?(Mac/Windows/Linux):')
+            age = input('What is your age?(eg: 18)')
+            print('Why do you like playing games?')
+            print('1. make friends')
+            print('2. spend free time')
+            print('3. enjoy competition')
+            print('4. relax')
+            print('5. others')
+            target = input('please select one reason:')
+            target = int(target)
+            res = data[data['PriceFinal'] < float(price)]
+            platform = 'Platform' + pre
+            res = res[res[platform] == True]
+            res = res[res['RequiredAge'] <= int(age)]
+
+            if target == 1:
+                res = res[(res['GenreIsMassivelyMultiplayer'] == True) | (res['GenreIsNonGame'] == True)]
+            elif target == 2:
+                res = res[(res['GenreIsCasual'] == True) | (res['GenreIsIndie'] == True)]
+            elif target == 3:
+                res = res[(res['GenreIsRPG'] == True) | (res['GenreIsRacing'] == True) | (res['GenreIsSports'] == True)]
+            elif target == 4:
+                res = res[(res['GenreIsSimulation'] == True) | (res['GenreIsStrategy'] == True)]
+            res = res.sort_values(by='RecommendationCount', ascending=False)
+            res = res.head(50)[['Name', 'RecommendationCount']]
+        except Exception as e:
+            # deal with invalid input
+            print('You have exited from this survey.')
+            recommend(data)
+
+        if res is None:
+            print('Sorry we don\'t find any results')
+            recommend(data)
+        # print the result 
+        print('Here are our recommendations based on your game habit:')
+        print('We hope you would like them!')
         print(res)
     else:
         print('Invalid input, please select again: ')
